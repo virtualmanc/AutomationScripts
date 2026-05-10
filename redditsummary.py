@@ -39,12 +39,12 @@ SUBREDDITS = [
     "ITCareerQuestions",
 ]
 
-EMAIL_FROM    = "neil.mcloughlin@gmail.com"
-EMAIL_TO      = ["njmcloughlin@hotmail.com"]
+EMAIL_FROM    = "youremailhere"
+EMAIL_TO      = ["youremailhere"]
 EMAIL_SUBJECT = "Daily Reddit Digest — {date}"
 SMTP_HOST     = "smtp.gmail.com"
 SMTP_PORT     = 587
-SMTP_USER     = "neil.mcloughlin@gmail.com"
+SMTP_USER     = "youremailhere"
 SMTP_PASSWORD = "xxxxxxx"
 
 # ─────────────────────────────────────────────
