@@ -1,0 +1,58 @@
+# ─────────────────────────────────────────────
+# Reddit Digest — Scheduled Task Setup
+# Run this once in an elevated PowerShell window
+# ─────────────────────────────────────────────
+
+# Path to your script — update this if it's in a different location
+$ScriptPath = "C:\claudecowork\Daily_Reddit.py"
+
+# Find python executable
+$PythonPath = (Get-Command python -ErrorAction SilentlyContinue).Source
+if (-not $PythonPath) {
+    Write-Error "Python not found in PATH. Please install Python or update this script with the full path."
+    exit 1
+}
+
+Write-Host "Using Python at: $PythonPath"
+
+# Task settings
+$TaskName = "Reddit Digest"
+$TaskDescription = "Fetches Reddit RSS feeds and emails a daily digest. Runs at 6am, or at startup if the PC was offline."
+
+# Create the action
+$Action = New-ScheduledTaskAction `
+    -Execute $PythonPath `
+    -Argument "`"$ScriptPath`""
+
+# Trigger 1 — Daily at 6am
+$TriggerDaily = New-ScheduledTaskTrigger -Daily -At "06:00"
+
+# Trigger 2 — At logon (catches missed runs if PC was off at 6am)
+$TriggerLogon = New-ScheduledTaskTrigger -AtLogOn
+
+# Settings — run as soon as possible if a scheduled start is missed
+$Settings = New-ScheduledTaskSettingsSet `
+    -StartWhenAvailable `
+    -RunOnlyIfNetworkAvailable `
+    -ExecutionTimeLimit (New-TimeSpan -Minutes 30) `
+    -MultipleInstances IgnoreNew
+
+# Register the task (runs as current user)
+Register-ScheduledTask `
+    -TaskName $TaskName `
+    -Description $TaskDescription `
+    -Action $Action `
+    -Trigger $TriggerDaily, $TriggerLogon `
+    -Settings $Settings `
+    -RunLevel Highest `
+    -Force
+
+Write-Host ""
+Write-Host "Task '$TaskName' created successfully." -ForegroundColor Green
+Write-Host "It will run daily at 6am, or at logon if the PC was offline at 6am."
+Write-Host ""
+Write-Host "To test it now, run:"
+Write-Host "  Start-ScheduledTask -TaskName '$TaskName'" -ForegroundColor Cyan
+Write-Host ""
+Write-Host "To remove the task later, run:"
+Write-Host "  Unregister-ScheduledTask -TaskName '$TaskName' -Confirm:`$false" -ForegroundColor Cyan
