@@ -45,7 +45,7 @@ EMAIL_SUBJECT = "Daily Reddit Digest — {date}"
 SMTP_HOST     = "smtp.gmail.com"
 SMTP_PORT     = 587
 SMTP_USER     = "neil.mcloughlin@gmail.com"
-SMTP_PASSWORD = "qmdh kvds ncgs hjlw"
+SMTP_PASSWORD = "xxxxxxx"
 
 # ─────────────────────────────────────────────
 
